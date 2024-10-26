@@ -5,6 +5,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
+using System.Dynamic;
 
 namespace Business.Concrete
 {
@@ -36,7 +37,12 @@ namespace Business.Concrete
 
         public IDataResult<Car> GetById(int id)
         {
-            return new SuccessDataResult<Car>(_carDal.Get(c => c.Id == id), Messages.CarFound);
+            var car = _carDal.Get(c => c.Id == id);
+            if (car == null)
+            {
+                return new ErrorDataResult<Car>(Messages.CarNotFound);
+            }
+            return new SuccessDataResult<Car>(car, Messages.CarFound);
         }
 
         public IDataResult<List<Car>> GetAll()

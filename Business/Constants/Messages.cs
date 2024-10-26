@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Entities.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,15 +31,18 @@ namespace Business.Constants
         public static string UserDeleted = "UserDeleted";
         public static string UsersListed = "UsersListed";
         public static string CarDetailsListed = "CarDetailsListed";
-
         public static string CarFound = "CarFound";
-
-        public static string BrandFound { get; internal set; }
-        public static string ColorFound { get; internal set; }
-        public static string RentalFound { get; internal set; }
-        public static string CustomerAdded { get; internal set; }
-        public static string CustomerDeleted { get; internal set; }
-        public static string CustomersListed { get; internal set; }
-        public static string CustomerFound { get; internal set; }
+        public static string BrandFound = "BrandFound";
+        public static string ColorFound = "ColorFound";
+        public static string RentalFound = "RentalFound";
+        public static string CustomerAdded = "CustomerAdded";
+        public static string CustomerDeleted = "CustomerDeleted";
+        public static string CustomersListed = "CustomersListed";
+        public static string CustomerFound = "CustomerFound";
+        public static string RentalAlreadyExists = "RentalAlreadyExists";
+        public static string RentalsByCarId = "RentalsByCarId";
+        public static string CarNotFound = "CarNotFound";
+        public static string NoRentalsByCarId = "NoRentalsByCarId";
+        public static string NoRentals = "NoRentals";
     }
 }
