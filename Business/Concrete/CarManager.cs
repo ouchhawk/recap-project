@@ -1,10 +1,14 @@
-﻿using _Core.Utilities.Results;
+﻿using _Core.CrossCuttingConcerns.Validation;
+using _Core.CrossCuttingConcerns.Validation.FluentValidation;
+using _Core.Utilities.Results;
 using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System.Dynamic;
 
 namespace Business.Concrete
@@ -20,6 +24,7 @@ namespace Business.Concrete
 
         public IResult Add(Car car)
         {
+            ValidationTool.Validate(new CarValidator(), car);
             _carDal.Add(car);
             return new SuccessResult(Messages.CarAdded);
         }
