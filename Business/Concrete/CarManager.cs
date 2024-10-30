@@ -23,22 +23,43 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            _carDal.Add(car);
-            return new SuccessResult(Messages.CarAdded);
+            var isSuccess = _carDal.Add(car);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.CarAdded);
+            }
+            return new Result(false, Messages.Failed);
         }
 
         public IResult Delete(Car car)
         {
-            _carDal.Delete(car);
-            return new SuccessResult(Messages.CarDeleted);
+            var isSuccess = _carDal.Delete(car);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.CarDeleted);
+            }
+            return new Result(false, Messages.Failed);
         }
         public IResult Update(Car car)
         {
-            _carDal.Update(car);
-            return new SuccessResult();
+            var isSuccess = _carDal.Update(car);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.CarUpdated);
+            }
+            return new Result(false, Messages.Failed);
+        }
+
+        public IDataResult<List<Car>> GetAll()
+        {
+            var cars = _carDal.GetAll();
+            if (cars == null)
+            {
+                return new ErrorDataResult<List<Car>>(Messages.Failed);
+            }
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarsListed);
         }
 
         public IDataResult<Car> GetById(int id)
@@ -46,19 +67,19 @@ namespace Business.Concrete
             var car = _carDal.Get(c => c.Id == id);
             if (car == null)
             {
-                return new ErrorDataResult<Car>(Messages.CarNotFound);
+                return new ErrorDataResult<Car>(Messages.Failed);
             }
             return new SuccessDataResult<Car>(car, Messages.CarFound);
         }
 
-        public IDataResult<List<Car>> GetAll()
-        {
-            return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.CarsListed);
-        }
-
         public IDataResult<List<CarDetailDTO>> GetCarDetails()
         {
-            return new SuccessDataResult<List<CarDetailDTO>>(_carDal.GetCarDetails(), Messages.CarDetailsListed);
+            var details = _carDal.GetCarDetails();
+            if (details == null)
+            {
+                return new ErrorDataResult<List<CarDetailDTO>>(Messages.Failed);
+            }
+            return new SuccessDataResult<List<CarDetailDTO>>(details, Messages.CarDetailsListed);
         }
 
     }

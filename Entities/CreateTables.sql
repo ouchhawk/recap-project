@@ -50,3 +50,11 @@ CREATE TABLE [dbo].[Users] (
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 
+CREATE TABLE [dbo].[CarImages]
+(
+	[Id] INT NOT NULL PRIMARY KEY, 
+    [CarId] INT NULL, 
+    [ImagePath] VARCHAR(100) NULL, 
+    [Date] DATETIME NULL, 
+    CONSTRAINT [FK_CarImages_Cars] FOREIGN KEY ([CarId]) REFERENCES [Cars]([Id])
+)

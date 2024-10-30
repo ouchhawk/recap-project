@@ -44,5 +44,27 @@ namespace Business.Constants
         public static string CarNotFound = "CarNotFound";
         public static string NoRentalsByCarId = "NoRentalsByCarId";
         public static string NoRentals = "NoRentals";
+        public static string Failed = "Operation failed";
+        public static string BrandUpdated = "BrandUpdated";
+        public static string CarImageAdded = "CarImageAdded";
+        public static string CarImageDeleted = "CarImageDeleted";
+        public static string CarImageUpdated = "CarImageUpdated";
+        public static string CarImagesListed = "CarImagesListed";
+        public static string CarImageFound = "CarImageFound";
+        public static string RentalUpdated = "RentalUpdated";
+        public static string CarUpdated = "CarUpdated";
+        public static string ColorUpdated = "ColorUpdated";
+        public static string CustomerUpdated = "CustomerUpdated";
+        public static string UserUpdated = "UserUpdated";
+        public static string UserFound = "UserFound";
+        public static string ImageLimitReached = "ImageLimitReached";
+        public static string CarImageDataNotFound = "CarImageDataNotFound";
+        public static string FileNotFound = "CarImageDataNotFound";
+        public static string CarImageNotFound = "CarImageNotFound";
+        public static string FileDeletionFailed = "FileDeletionFailed";
+        public static string FileDeleted = "FileDeleted";
+        public static string ImageDataDeletionFailed = "ImageDataDeletionFailed";
+        public static string ImageDataUpdateFailed = "ImageDataUpdateFailed";
+        public static string FileCreated = "FileCreated";
     }
 }

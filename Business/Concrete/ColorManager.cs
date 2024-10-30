@@ -23,28 +23,52 @@ namespace Business.Concrete
 
         public IResult Add(Color color)
         {
-            _colorDal.Add(color);
-            return new Result(true, Messages.ColorAdded);
+            var isSuccess = _colorDal.Add(color);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.ColorAdded);
+            }
+            return new Result(false, Messages.Failed);
         }
 
         public IResult Delete(Color color)
         {
-            _colorDal.Delete(color);
-            return new Result(true, Messages.ColorDeleted);
+            var isSuccess = _colorDal.Delete(color);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.ColorDeleted);
+            }
+            return new Result(false, Messages.Failed);
         }
         public IResult Update(Color color)
         {
-            _colorDal.Update(color);
-            return new SuccessResult();
+            var isSuccess = _colorDal.Update(color);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.ColorUpdated);
+            }
+            return new Result(false, Messages.Failed);
+
         }
 
         public IDataResult<List<Color>> GetAll()
         {
+            var colors = _colorDal.GetAll();
+            if (colors == null)
+            {
+                return new ErrorDataResult<List<Color>>(Messages.Failed);
+            }
             return new SuccessDataResult<List<Color>>(_colorDal.GetAll(), Messages.ColorsListed);
         }
+
         public IDataResult<Color> GetById(int id)
         {
-            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id), Messages.ColorFound);
+            var color = _colorDal.Get(c => c.Id == id);
+            if (color == null)
+            {
+                return new ErrorDataResult<Color>(Messages.Failed);
+            }
+            return new SuccessDataResult<Color>(color, Messages.ColorFound);
         }
     }
 }

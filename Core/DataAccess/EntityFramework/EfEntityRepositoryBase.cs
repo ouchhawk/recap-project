@@ -8,23 +8,39 @@ namespace _Core.DataAccess.EntityFramework
         where TEntity : class, IEntity, new() 
         where TContext : DbContext, new()
     {
-        public void Add(TEntity entity)
+        public bool Add(TEntity entity)
         {
             using (TContext context = new TContext())
             {
                 var addedEntity = context.Entry(entity);
                 addedEntity.State = EntityState.Added;
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                    return true;
+                }
+                catch (DbUpdateException ex)
+                {
+                    return false;
+                }
             }
         }
 
-        public void Delete(TEntity entity)
+        public bool Delete(TEntity entity)
         {
             using (TContext context = new TContext())
             {
                 var deletedEntity = context.Entry(entity);
                 deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                    return true;
+                }
+                catch (DbUpdateException ex)
+                {
+                    return false;
+                }
             }
         }
 
@@ -41,17 +57,24 @@ namespace _Core.DataAccess.EntityFramework
             using (TContext context = new TContext())
             {
                 return filter == null ? context.Set<TEntity>().ToList() : context.Set<TEntity>().Where(filter).ToList();
-
             }
         }
 
-        public void Update(TEntity entity)
+        public bool Update(TEntity entity)
         {
             using (TContext context = new TContext())
             {
                 var updatedEntity = context.Entry(entity);
                 updatedEntity.State = EntityState.Modified;
-                context.SaveChanges();
+                try
+                {
+                    context.SaveChanges();
+                    return true;
+                }
+                catch (DbUpdateException ex)
+                {
+                    return false;
+                }
             }
         }
     }

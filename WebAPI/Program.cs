@@ -20,6 +20,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//builder.Services.AddCors(options =>
+//{
+//    options.AddPolicy("AllowAngularApp", builder =>
+//    {
+//        builder.WithOrigins("http://localhost:4200") // Angular app URL
+//               .AllowAnyHeader()
+//               .AllowAnyMethod();
+//    });
+//});
+
+
+
+
+
 builder.Host
     .UseServiceProviderFactory(services => new AutofacServiceProviderFactory())
     .ConfigureContainer<ContainerBuilder>(builder => 
@@ -35,6 +49,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
+
+//app.UseCors("AllowAngularApp");
 
 app.UseHttpsRedirection();
 

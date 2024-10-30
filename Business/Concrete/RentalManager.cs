@@ -1,4 +1,5 @@
-﻿using _Core.Utilities.Results;
+﻿using _Core.Utilities.Business;
+using _Core.Utilities.Results;
 using Business.Abstract;
 using Business.Constants;
 using DataAccess.Abstract;
@@ -15,45 +16,48 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
-        ICarDal _carDal;
+        ICarService _carService;
 
-        public RentalManager(IRentalDal rentalDal, ICarDal carDal)
+        public RentalManager(IRentalDal rentalDal, ICarService carService)
         {
             _rentalDal = rentalDal;
-            _carDal = carDal;
+            _carService = carService;
         }
 
         public IResult Add(Rental rental)
         {
-            var carInfo = _carDal.Get(c => c.Id == rental.CarId);
-            if (carInfo == null)
+            List<IResult> errors = BusinessRules.Run(DoesCarExist(rental), IsRentalAvailable(rental));
+            if (errors.Count > 0)
             {
-                return new ErrorResult(Messages.CarNotFound);
+                return errors[0];
             }
-
-            var rentalInfo = _rentalDal.GetAll(r => r.CarId == rental.CarId).OrderByDescending(r => r.Id).FirstOrDefault();
-            if ( rentalInfo != null && rentalInfo.ReturnDate == null)
+            
+            var isSuccess = _rentalDal.Add(rental);
+            if (isSuccess)
             {
-                return new ErrorResult(Messages.RentalAlreadyExists);
-            }
-            else
-            {
-                _rentalDal.Add(rental);
                 return new SuccessResult(Messages.RentalAdded);
-
             }
+            return new ErrorResult(Messages.Failed);
         }
 
         public IResult Delete(Rental rental)
         {
-            _rentalDal.Delete(rental);
-            return new SuccessResult(Messages.RentalDeleted);
+            var isSuccess = _rentalDal.Delete(rental);
+            if (isSuccess)
+            {
+                return new SuccessResult(Messages.RentalDeleted);
+            }
+            return new ErrorResult(Messages.Failed);
         }
 
         public IResult Update(Rental rental)
         {
-            _rentalDal.Update(rental);
-            return new SuccessResult();
+            var isSuccess = _rentalDal.Update(rental);
+            if (isSuccess)
+            {
+                return new SuccessResult(Messages.RentalUpdated);
+            }
+            return new ErrorResult(Messages.Failed);
         }
 
         public IDataResult<List<Rental>> GetAll()
@@ -79,8 +83,26 @@ namespace Business.Concrete
                 return new ErrorDataResult<Rental>(Messages.NoRentals);
             }
             return new SuccessDataResult<Rental>(rental, Messages.RentalFound);
-
         }
 
+        private IResult IsRentalAvailable(Rental rental)
+        {
+            var rentalInfo = _rentalDal.GetAll(r => r.CarId == rental.CarId).OrderByDescending(r => r.Id).FirstOrDefault();
+            if (rentalInfo != null && rentalInfo.ReturnDate == null)
+            {
+                return new ErrorResult(Messages.RentalAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult DoesCarExist(Rental rental)
+        {
+            var carInfo = _carService.GetById(rental.CarId);
+            if (carInfo == null)
+            {
+                return new ErrorResult(Messages.CarNotFound);
+            }
+            return new SuccessResult();
+        }
     }
 }

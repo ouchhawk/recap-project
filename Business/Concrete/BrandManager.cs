@@ -14,7 +14,6 @@ namespace Business.Concrete
 {
     public class BrandManager : IBrandService
     {
-        
         IBrandDal _brandDal;
 
         public BrandManager(IBrandDal brandDal)
@@ -24,29 +23,52 @@ namespace Business.Concrete
 
         public IResult Add(Brand brand)
         {
-            _brandDal.Add(brand);
-            return new Result(true, Messages.BrandAdded);
+            var isSuccess = _brandDal.Add(brand);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.BrandAdded);
+            }
+            return new Result(false, Messages.Failed);
         }
 
         public IResult Delete(Brand brand)
         {
-            _brandDal.Delete(brand);
-            return new Result(true, Messages.BrandDeleted);
+            var isSuccess = _brandDal.Delete(brand);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.BrandDeleted);
+            }
+            return new Result(false, Messages.Failed);
         }
         public IResult Update(Brand brand)
         {
-            _brandDal.Update(brand);
-            return new SuccessResult();
+            var isSuccess = _brandDal.Update(brand);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.BrandUpdated);
+            }
+            return new Result(false, Messages.Failed);
+
         }
 
         public IDataResult<List<Brand>> GetAll()
         {
+            var brands = _brandDal.GetAll();
+            if(brands == null)
+            {
+                return new ErrorDataResult<List<Brand>>(Messages.Failed);
+            }
             return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(), Messages.BrandsListed);
         }
 
         public IDataResult<Brand> GetById(int id)
         {
-            return new SuccessDataResult<Brand>(_brandDal.Get(c => c.Id == id), Messages.BrandFound);
+            var brand = _brandDal.Get(c => c.Id == id);
+            if (brand == null)
+            {
+                return new ErrorDataResult<Brand>(Messages.Failed);
+            }
+            return new SuccessDataResult<Brand>(brand, Messages.BrandFound);
         }
     }
 }

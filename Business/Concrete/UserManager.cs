@@ -20,30 +20,55 @@ namespace Business.Concrete
         {
             _userDal = userDal;
         }
+
         public IResult Add(User user)
         {
-            _userDal.Add(user);
-            return new SuccessResult(Messages.UserAdded);
+            var isSuccess = _userDal.Add(user);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.UserAdded);
+            }
+            return new Result(false, Messages.Failed);
         }
 
         public IResult Delete(User user)
         {
-            _userDal.Delete(user);
-            return new SuccessResult(Messages.UserDeleted);
+            var isSuccess = _userDal.Delete(user);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.UserDeleted);
+            }
+            return new Result(false, Messages.Failed);
         }
         public IResult Update(User user)
         {
-            _userDal.Update(user);
-            return new SuccessResult();
+            var isSuccess = _userDal.Update(user);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.UserUpdated);
+            }
+            return new Result(false, Messages.Failed);
+
         }
 
         public IDataResult<List<User>> GetAll()
         {
+            var users = _userDal.GetAll();
+            if(users == null)
+            {
+                return new ErrorDataResult<List<User>>(Messages.Failed);
+            }
             return new SuccessDataResult<List<User>>(_userDal.GetAll(), Messages.UsersListed);
         }
+
         public IDataResult<User> GetById(int id)
         {
-            return new SuccessDataResult<User>(_userDal.Get(c => c.Id == id), Messages.RentalFound);
+            var user = _userDal.Get(c => c.Id == id);
+            if (user == null)
+            {
+                return new ErrorDataResult<User>(Messages.Failed);
+            }
+            return new SuccessDataResult<User>(user, Messages.UserFound);
         }
     }
 }

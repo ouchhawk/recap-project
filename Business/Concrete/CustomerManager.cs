@@ -20,30 +20,55 @@ namespace Business.Concrete
         {
             _customerDal = customerDal;
         }
+
         public IResult Add(Customer customer)
         {
-            _customerDal.Add(customer);
-            return new SuccessResult(Messages.CustomerAdded);
+            var isSuccess = _customerDal.Add(customer);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.CustomerAdded);
+            }
+            return new Result(false, Messages.Failed);
         }
 
         public IResult Delete(Customer customer)
         {
-            _customerDal.Delete(customer);
-            return new SuccessResult(Messages.CustomerDeleted);
+            var isSuccess = _customerDal.Delete(customer);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.CustomerDeleted);
+            }
+            return new Result(false, Messages.Failed);
         }
         public IResult Update(Customer customer)
         {
-            _customerDal.Update(customer);
-            return new SuccessResult();
+            var isSuccess = _customerDal.Update(customer);
+            if (isSuccess)
+            {
+                return new Result(true, Messages.CustomerUpdated);
+            }
+            return new Result(false, Messages.Failed);
+
         }
 
         public IDataResult<List<Customer>> GetAll()
         {
+            var customers = _customerDal.GetAll();
+            if (customers == null)
+            {
+                return new ErrorDataResult<List<Customer>>(Messages.Failed);
+            }
             return new SuccessDataResult<List<Customer>>(_customerDal.GetAll(), Messages.CustomersListed);
         }
+
         public IDataResult<Customer> GetById(int id)
         {
-            return new SuccessDataResult<Customer>(_customerDal.Get(c => c.Id == id), Messages.CustomerFound);
+            var customer = _customerDal.Get(c => c.Id == id);
+            if (customer == null)
+            {
+                return new ErrorDataResult<Customer>(Messages.Failed);
+            }
+            return new SuccessDataResult<Customer>(customer, Messages.CustomerFound);
         }
 
     }
