@@ -91,7 +91,7 @@ namespace WebAPI.Controllers
                 return NotFound(new { message = result.Message });
             }
 
-            return File(result.Data, "image/jpeg", fileName); // Use correct MIME type for your file
+            return File(result.Data, "image/jpeg", fileName);
         }
     }
 }

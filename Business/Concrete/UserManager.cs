@@ -1,4 +1,5 @@
-﻿using _Core.Utilities.Results;
+﻿using _Core.Entities.Concrete;
+using _Core.Utilities.Results;
 using Business.Abstract;
 using Business.Constants;
 using DataAccess.Abstract;
@@ -66,7 +67,21 @@ namespace Business.Concrete
             var user = _userDal.Get(c => c.Id == id);
             if (user == null)
             {
-                return new ErrorDataResult<User>(Messages.Failed);
+                return new ErrorDataResult<User>(Messages.UserNotFound);
+            }
+            return new SuccessDataResult<User>(user, Messages.UserFound);
+        }
+        public IDataResult<List<OperationClaim>> GetClaims(User user)
+        {
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user), Messages.ClaimsListed);
+        }
+
+        public IDataResult<User> GetByMail(string email)
+        {
+            var user = _userDal.Get(u => u.Email == email);
+            if (user == null)
+            {
+                return new ErrorDataResult<User>(Messages.UserNotFound);
             }
             return new SuccessDataResult<User>(user, Messages.UserFound);
         }

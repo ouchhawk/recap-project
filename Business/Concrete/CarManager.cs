@@ -3,6 +3,7 @@ using _Core.CrossCuttingConcerns.Validation;
 using _Core.CrossCuttingConcerns.Validation.FluentValidation;
 using _Core.Utilities.Results;
 using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using DataAccess.Abstract;
@@ -23,6 +24,7 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
+        [SecuredOperation("admin")]
         public IResult Add(Car car)
         {
             var isSuccess = _carDal.Add(car);

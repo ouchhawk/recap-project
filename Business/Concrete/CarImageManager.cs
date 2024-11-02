@@ -4,7 +4,6 @@ using Business.Abstract;
 using Business.Constants;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -28,7 +27,7 @@ namespace Business.Concrete
             _carService = carService;
         }
 
-        public IResult Add(CarImage carImage, IFormFile imageFile)
+        public IResult Add(CarImage carImage, Microsoft.AspNetCore.Http.IFormFile imageFile)
         {
             List<IResult> errors = BusinessRules.Run(IsImageLimitReached(carImage.CarId));
             if (errors.Count > 0)
@@ -70,7 +69,7 @@ namespace Business.Concrete
             return Delete(carImage);
         }
 
-        public IResult Update(IFormFile imageFile, CarImage carImage)
+        public IResult Update(Microsoft.AspNetCore.Http.IFormFile imageFile, CarImage carImage)
         {
             bool isSuccess = DeleteFile(carImage.ImagePath).Success;
             if (!isSuccess) {
@@ -148,7 +147,7 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
-        private IDataResult<string> CreateFile(IFormFile imageFile, string folderPath)
+        private IDataResult<string> CreateFile(Microsoft.AspNetCore.Http.IFormFile imageFile, string folderPath)
         {
             if (!Directory.Exists(folderPath))
             {
@@ -171,13 +170,10 @@ namespace Business.Concrete
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
-                }
-                else
-                {
-                    return new ErrorResult();
+                    return new SuccessResult();
                 }
             }
-            return new SuccessResult();
+            return new ErrorResult();
         }
     }
 }
