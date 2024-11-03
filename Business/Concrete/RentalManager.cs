@@ -5,6 +5,7 @@ using Business.Constants;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,6 +104,16 @@ namespace Business.Concrete
                 return new ErrorResult(Messages.CarNotFound);
             }
             return new SuccessResult();
+        }
+
+        public IDataResult<List<RentalDetailDTO>> GetRentalDetails()
+        {
+            var details = _rentalDal.GetRentalDetails();
+            if (details == null)
+            {
+                return new ErrorDataResult<List<RentalDetailDTO>>(Messages.Failed);
+            }
+            return new SuccessDataResult<List<RentalDetailDTO>>(details, Messages.CarDetailsListed);
         }
     }
 }
