@@ -8,6 +8,7 @@ using Business.DependencyResolvers.Autofac;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using _Core.Utilities.IoC;
+using _Core.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.ConfigureCustomExceptionMiddleware();
+
 app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
 app.UseHttpsRedirection();

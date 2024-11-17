@@ -74,9 +74,10 @@ namespace Business.Concrete
             return new SuccessDataResult<Car>(car, Messages.CarFound);
         }
 
-        public IDataResult<List<CarDetailDTO>> GetCarDetails()
+        public IDataResult<List<CarDetailDTO>> GetCarDetails(int? brandId, int? colorId)
         {
-            var details = _carDal.GetCarDetails();
+
+            var details = _carDal.GetCarDetails(brandId, colorId);
             if (details == null)
             {
                 return new ErrorDataResult<List<CarDetailDTO>>(Messages.Failed);
